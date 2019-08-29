@@ -12,6 +12,13 @@ import routerMaps from './router'
 // vuex
 // import app from './store/app'
 
+// 富文本编辑器
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import { quillEditor } from 'vue-quill-editor'
+
 export default {
   install(module, store) {
     // 注册路由
@@ -23,5 +30,7 @@ export default {
     if (store !== undefined) {
       // store.registerModule('app', app)
     }
+    // 注册富文本编辑器
+    module.component('quill-editor', quillEditor)
   }
 }
