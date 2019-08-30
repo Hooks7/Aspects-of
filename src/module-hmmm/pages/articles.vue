@@ -19,12 +19,12 @@
         <el-table-column label="序号" prop="id"></el-table-column>
         <el-table-column label="标题" prop="title"></el-table-column>
         <el-table-column label="阅读数" prop="state"></el-table-column>
-        <el-table-column label="状态" prop="state"></el-table-column>
+        <el-table-column  label="状态" prop="state" ></el-table-column>
         <el-table-column label="录入人" prop="creator"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button type="text" size="small">预览</el-button>
-            <el-button type="text" size="small">修改</el-button>
+            <el-button type="text" size="small" @click="amend(scope.row) ">修改</el-button>
             <el-button type="text" size="small" @click="removelist(scope.row)">删除</el-button>
             <el-button type="text" size="small">禁用</el-button>
           </template>
@@ -50,7 +50,6 @@
 <script>
 // 文章列表
 import { list, remove } from '../../api/hmmm/articles'
-import { constants } from 'fs'
 export default {
   name: 'ArticlesList',
   data() {
@@ -83,12 +82,21 @@ export default {
     this.list = result.data.items
     this.page.total = result.data.counts
     // console.log(this.page.total)
-  }, // 删除
+  },
+  // 删除
   async removelist(row) {
+    await this.$confirm('您确定要删除吗', '提示')
     console.log(row)
    await remove(row)
    this.getList()
+  },
+  // 修改
+  async amend(row) {
+    this.$router.push(`/articles/newly/${row.id}`)
   }
+  // formatter() {
+  //   console.log(arguments)
+  // }
   },
   created() {
     // 文章列表

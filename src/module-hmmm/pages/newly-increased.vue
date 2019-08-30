@@ -7,16 +7,16 @@
             <el-input style="width:654px" v-model="ruleForm.title" placeholder="请输入标题"></el-input>
           </el-form-item>
           <!-- 富文本编辑器 -->
-          <el-form-item prop="content">
+          <el-form-item prop="articleBody">
             <quill-editor
               style="width:707px;height:218px;margin-top:21px; margin-bottom:81px"
               type="textarea"
               placeholder="请输入内容"
-              v-model="ruleForm.content"
+              v-model="ruleForm.articleBody"
             ></quill-editor>
           </el-form-item>
-          <el-form-item label="视频地址" prop="Videoaddress">
-            <el-input style="width:640px" placeholder="请输入视频地址" v-model="ruleForm.Videoaddress"></el-input>
+          <el-form-item label="视频地址" prop="videoURL">
+            <el-input style="width:640px" placeholder="请输入视频地址" v-model="ruleForm.videoURL"></el-input>
           </el-form-item>
           <el-form-item style="margin:50px 0 0 300px">
             <el-button type="primary" @click="submitForm">提交</el-button>
@@ -28,14 +28,14 @@
   </el-card>
 </template>
 <script>
-import {add} from '../../api/hmmm/articles'
+import { add, detail } from '../../api/hmmm/articles'
 export default {
   data() {
     return {
       ruleForm: {
         title: '', // 标题
-        content: '', // 副本问内容
-        Videoaddress: '' // 视频地址
+        articleBody: '', // 副本问内容
+        videoURL: '' // 视频地址
       },
       rules: {
         // 校验
@@ -43,8 +43,8 @@ export default {
           { required: true, message: '请输入标题', trigger: 'blur' },
           { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
-        content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
-        Videoaddress: [
+         articleBody: [{ required: true, message: '请输入内容', trigger: 'blur' }],
+        videoURL: [
           { required: true, message: '请输入地址', trigger: 'blur' }
         ]
       }
@@ -55,11 +55,11 @@ export default {
       // 提交
       this.$refs.ruleForm.validate(async isOk => {
         if (isOk) {
-         await add({
-           title: this.ruleForm.title,
-           articleBody: this.ruleForm.content,
-           videoURL: this.ruleForm.Videoaddress
-         })
+          await add({
+            title: this.ruleForm.title,
+            articleBody: this.ruleForm.articleBody,
+            videoURL: this.ruleForm.videoURL
+          })
           this.$router.push('/articles/list')
         }
       })
@@ -67,6 +67,22 @@ export default {
     // 跳转
     headback() {
       this.$router.push('/articles/list')
+    },
+    // 修改
+    async getArticleByid() {
+      let { articleId } = this.$route.params
+      // console.log(articleId)
+      let result = await detail({
+        id: articleId
+      })
+      console.log(result.data)
+      this.ruleForm = result.data
+    }
+  },
+  created() {
+    let { articleId } = this.$route.params
+    if (articleId) {
+      this.getArticleByid()
     }
   }
 }
