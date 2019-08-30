@@ -1,8 +1,8 @@
 <template>
   <el-card>
     <div class="dashboard-container">
-      <!-- <div class="app-container">面试技巧</div> -->
-      <el-button type="success" plain @click="jump">新增面试技巧</el-button>
+      <div class="app-container">
+        <el-button type="success" plain @click="jump">新增面试技巧</el-button>
       <el-row type="flex" style="margin-top:15px" justify="space-between">
         <el-col :span="6">
           <el-input placeholder="请输入题目编号/题干">
@@ -22,10 +22,10 @@
         <el-table-column label="状态" prop="state"></el-table-column>
         <el-table-column label="录入人" prop="creator"></el-table-column>
         <el-table-column label="操作">
-          <template>
+          <template slot-scope="scope">
             <el-button type="text" size="small">预览</el-button>
             <el-button type="text" size="small">修改</el-button>
-            <el-button type="text" size="small">删除</el-button>
+            <el-button type="text" size="small" @click="removelist(scope.row)">删除</el-button>
             <el-button type="text" size="small">禁用</el-button>
           </template>
         </el-table-column>
@@ -41,13 +41,16 @@
           :total="page.total"
         ></el-pagination>
       </el-row>
+      </div>
+      
     </div>
   </el-card>
 </template>
 
 <script>
 // 文章列表
-import { list } from '../../api/hmmm/articles'
+import { list, remove } from '../../api/hmmm/articles'
+import { constants } from 'fs'
 export default {
   name: 'ArticlesList',
   data() {
@@ -76,10 +79,15 @@ export default {
       page: this.page.currentpage,
       pagesize: this.page.pageSize
     })
-    console.log(result)
+    // console.log(result)
     this.list = result.data.items
     this.page.total = result.data.counts
-    console.log(this.page.total)
+    // console.log(this.page.total)
+  }, // 删除
+  async removelist(row) {
+    console.log(row)
+   await remove(row)
+   this.getList()
   }
   },
   created() {
