@@ -18,7 +18,7 @@
       <el-table :data="list" style="margin-top:20px">
         <el-table-column label="序号" prop="id"></el-table-column>
         <el-table-column label="标题" prop="title"></el-table-column>
-        <el-table-column label="阅读数" prop="reads"></el-table-column>
+        <el-table-column label="阅读数" prop="state"></el-table-column>
         <el-table-column label="状态" prop="state"></el-table-column>
         <el-table-column label="录入人" prop="creator"></el-table-column>
         <el-table-column label="操作">
@@ -31,13 +31,16 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <el-row type="flex" justify="center"><el-col :span="8" style="margin-top:25px">
-      <el-pagination
-      layout="prev,pager,next"
-       background
-      :total="100">
-      </el-pagination>
-      </el-col></el-row>
+      <el-row type="flex" justify="center" style="margin-top:20px">
+        <el-pagination
+          layout="prev,pager,next"
+          background
+          @current-change="changePage"
+          :page-size="page.pageSize"
+          :current-page="page.currentpage"
+          :total="page.total"
+        ></el-pagination>
+      </el-row>
     </div>
   </el-card>
 </template>
@@ -49,19 +52,39 @@ export default {
   name: 'ArticlesList',
   data() {
     return {
-      list: []
+      list: [],
+      page: {
+        pageSize: 10,
+        total: 0,
+        currentpage: 1
+      }
     }
   },
   methods: {
+    // 新增
     jump() {
       this.$router.push('/articles/newly')
-    }
-  },
-  async created() {
-    // 文章列表
-    let result = await list()
+    },
+    // 分页
+    changePage(newpage) {
+      this.page.currentpage = newpage
+      this.getList()
+    },
+    // 获取列表数据
+    async getList() {
+    let result = await list({
+      page: this.page.currentpage,
+      pagesize: this.page.pageSize
+    })
     console.log(result)
     this.list = result.data.items
+    this.page.total = result.data.counts
+    console.log(this.page.total)
+  }
+  },
+  created() {
+    // 文章列表
+   this.getList()
   }
 }
 </script>
