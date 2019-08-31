@@ -28,7 +28,7 @@
   </el-card>
 </template>
 <script>
-import { add, detail } from '../../api/hmmm/articles'
+import { add, detail, update } from '../../api/hmmm/articles'
 export default {
   data() {
     return {
@@ -37,53 +37,63 @@ export default {
         articleBody: '', // 副本问内容
         videoURL: '' // 视频地址
       },
+      loading: true,
       rules: {
         // 校验
         title: [
-          { required: true, message: '请输入标题', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+          { required: true, message: '请输入标题', trigger: 'blur' }
         ],
-         articleBody: [{ required: true, message: '请输入内容', trigger: 'blur' }],
-        videoURL: [
-          { required: true, message: '请输入地址', trigger: 'blur' }
-        ]
+        articleBody: [
+          { required: true, message: '请输入内容', trigger: 'blur' }
+        ],
+        videoURL: [{ required: true, message: '请输入地址', trigger: 'blur' }]
       }
     }
   },
   methods: {
     submitForm() {
-      // 提交
       this.$refs.ruleForm.validate(async isOk => {
         if (isOk) {
-          await add({
+          let { articleId } = this.$route.params // id
+          // 接受传参
+          let parameter = {
             title: this.ruleForm.title,
             articleBody: this.ruleForm.articleBody,
             videoURL: this.ruleForm.videoURL
-          })
-          this.$router.push('/articles/list')
+          }
+          if (articleId) {
+            // 修改
+            await update({ id: articleId, ...parameter })
+          } else {
+            // 新增
+            await add({ ...parameter })
+          }
+          this.jump()
         }
       })
     },
-    // 跳转
+
+    // 取消跳转主页
     headback() {
-      this.$router.push('/articles/list')
+      this.jump()
     },
-    // 修改
+
+    // 获取数据
     async getArticleByid() {
       let { articleId } = this.$route.params
-      // console.log(articleId)
-      let result = await detail({
-        id: articleId
-      })
-      console.log(result.data)
+      let result = await detail({ id: articleId })
       this.ruleForm = result.data
+    },
+
+    // 跳转主页
+    jump() {
+      this.$router.push('/articles/list')
     }
   },
+
   created() {
     let { articleId } = this.$route.params
-    if (articleId) {
-      this.getArticleByid()
-    }
+    articleId && this.getArticleByid() // 获取数据（文章详情）
   }
 }
 </script>
