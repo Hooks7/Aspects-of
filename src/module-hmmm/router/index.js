@@ -98,16 +98,10 @@ export default [{
         path: 'tags',
         component: _import('hmmm/pages/tags'),
         name: 'subjects-tags',
-<<<<<<< HEAD
+
         meta: { title: '标签', noCache: true }
-      },
-=======
-        meta: {
-          title: '标签',
-          noCache: true
-        }
       }
->>>>>>> 66c2ff876f4730dd8e17b01ddeaddda6a4467887
+
     ]
   },
   {
