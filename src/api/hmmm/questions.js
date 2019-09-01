@@ -50,5 +50,6 @@ export const setRecords = data =>
 export const randoms = data => createAPI(`/questions/randoms`, 'get', data)
 
 // 组题列表删除
-export const removeRandoms = data =>
+export const removeRandoms = data => {
   createAPI(`/questions/randoms/${data.id}`, 'delete', data)
+}
