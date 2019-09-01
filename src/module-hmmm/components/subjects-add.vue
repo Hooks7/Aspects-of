@@ -1,14 +1,24 @@
 <template>
   <div class="dashboard-container">
-    <div class="app-container">学科添加</div>
+    
   </div>
 </template>
 
 <script>
+import { add } from '../../api/hmmm/subjects'
 export default {
   name: 'SubjectsAdd',
   data() {
-    return {}
+    return {
+      form:{
+        subjectName:'',
+        isFrontDisplay:true
+      } 
+    }
+  },
+  methods:{
+    
+      
   }
 }
 </script>

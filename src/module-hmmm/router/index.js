@@ -83,7 +83,7 @@ export default [
         component: _import('hmmm/pages/tags'),
         name: 'subjects-tags',
         meta: { title: '标签', noCache: true }
-      }
+      },
     ]
   },
   {

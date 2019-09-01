@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="app-container">目录管理</div>
+  
   </div>
 </template>
 
@@ -9,6 +9,9 @@ export default {
   name: 'DirectorysList',
   data() {
     return {}
+  },
+  methods:{
+    
   }
 }
 </script>
