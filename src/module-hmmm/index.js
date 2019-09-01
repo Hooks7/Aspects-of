@@ -32,5 +32,6 @@ export default {
     }
     // 注册富文本编辑器
     module.component('quill-editor', quillEditor)
+
   }
 }

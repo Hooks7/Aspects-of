@@ -1,5 +1,3 @@
-/* eslint-disable vue/no-dupe-keys */
-/* eslint-disable vue/no-dupe-keys */
 <template>
   <el-card>
     <div class="dashboard-container">
@@ -7,7 +5,7 @@
         <el-button type="success" plain @click="jump">新增面试技巧</el-button>
         <el-row type="flex" style="margin-top:15px" justify="space-between">
           <el-col :span="6">
-            <el-input placeholder="请输入题目编号/题干" v-model="inputBox" >
+            <el-input placeholder="请输入题目编号/题干" v-model="inputBox">
               <template slot="prepend">关键字</template>
             </el-input>
           </el-col>
@@ -17,16 +15,20 @@
           </el-col>
         </el-row>
         <!-- 表格 -->
-        <el-table :data="list" style="margin-top:20px " stripe >
-          <el-table-column label="序号"  width="150" prop="id"></el-table-column>
-          <el-table-column label="标题"  width="430" prop="title"></el-table-column>
+        <el-table :data="list" style="margin-top:20px " stripe>
+          <el-table-column label="序号" width="150" prop="id"></el-table-column>
+          <el-table-column label="标题" width="430" prop="title"></el-table-column>
           <el-table-column label="阅读数" width="150" prop="state"></el-table-column>
           <el-table-column label="状态" prop="state" :formatter="formatter"></el-table-column>
           <el-table-column label="录入人" prop="creator"></el-table-column>
-          <el-table-column label="操作" >
+          <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" showConfirmButton='false' size="small" @click="open(scope.row)">预览</el-button>
-
+              <el-button
+                type="text"
+                showConfirmButton="false"
+                size="small"
+                @click="open(scope.row)"
+              >预览</el-button>
               <el-button type="text" size="small" @click="amend(scope.row) ">修改</el-button>
               <el-button type="text" size="small" @click="removelist(scope.row)">删除</el-button>
               <!-- 打开关闭功能 -->
@@ -42,8 +44,9 @@
         <!-- 分页 -->
         <el-row type="flex" justify="center" style="margin-top:20px">
           <el-pagination
-            layout="prev,pager,next,jumper"
+            layout="total,sizes,prev,pager,next,jumper"
             background
+            @size-change="handleSizeChange"
             @current-change="changePage"
             :page-size="page.pageSize"
             :current-page="page.currentpage"
@@ -69,17 +72,20 @@ export default {
         pageSize: 10,
         total: 0,
         currentpage: 1
-
       },
       // 输入框
       inputBox: '',
-        table: false,
-        dialog: false,
-        loading: false
+      table: false,
+      dialog: false,
+      loading: false
     }
   },
   methods: {
-
+    // 列表
+    handleSizeChange(val) {
+      this.page.pageSize = val
+      this.getList()
+    },
     // 新增跳转
     jump() {
       this.$router.push('/articles/newly')
@@ -119,7 +125,7 @@ export default {
     // 预览
     open(row) {
       this.$alert(row.articleBody, row.title, {
-           dangerouslyUseHTMLString: true
+        dangerouslyUseHTMLString: true
       })
     },
     // 分页
@@ -143,13 +149,19 @@ export default {
       if (!this.inputBox) {
         this.getList()
       }
-     this.list = this.list.filter(item =>
-           item.title.startsWith(this.inputBox)
-        )
-        this.page.total = 1
+      this.list = this.list.filter(item => item.title.indexOf(this.inputBox) > -1)
+      this.page.total = 1
+      this.page.currentpage = 1
     }
   },
-
+  // 监听搜索
+  // computed: {
+  //   newlist() {
+  //    return this.list.filter(item => {
+  //      return item.title.startsWith(this.inputBox)
+  //    })
+  //   }
+  // },
   created() {
     // 文章列表
     this.getList()
@@ -160,7 +172,7 @@ export default {
 <style scoped>
 .dashboard-container {
   width: 100%;
-  height: 100vh;
+  height: 100%;
 }
 .flex {
   display: flex;

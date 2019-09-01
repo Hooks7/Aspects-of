@@ -40,9 +40,7 @@ export default {
       loading: true,
       rules: {
         // 校验
-        title: [
-          { required: true, message: '请输入标题', trigger: 'blur' }
-        ],
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         articleBody: [
           { required: true, message: '请输入内容', trigger: 'blur' }
         ],
@@ -54,20 +52,16 @@ export default {
     submitForm() {
       this.$refs.ruleForm.validate(async isOk => {
         if (isOk) {
-          let { articleId } = this.$route.params // id
+          let articleId = Number(this.$route.params.articleId) // id
           // 接受传参
           let parameter = {
             title: this.ruleForm.title,
             articleBody: this.ruleForm.articleBody,
             videoURL: this.ruleForm.videoURL
           }
-          if (articleId) {
-            // 修改
-            await update({ id: articleId, ...parameter })
-          } else {
-            // 新增
-            await add({ ...parameter })
-          }
+          articleId
+            ? await update({ id: articleId, ...parameter }) // 修改
+            : await add({ ...parameter }) // 新增
           this.jump()
         }
       })
